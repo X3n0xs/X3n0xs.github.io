@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
+<script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>360° Virtual Tour - Monykandy</title>
+    <meta name="description" content="Interactive 360° panoramic tour with floor plan navigation and scene hotspots.">
+    <meta property="og:image" content="../assets/img/archi/biocityfacade.jpg">
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css?h=a4db6ab85891bcba7fc13e8269f3233f">
+    <link rel="stylesheet" href="../assets/css/Inter.css?h=4371827078d56580d47a92719fb6854f">
+    <link rel="stylesheet" href="../assets/css/Libre%20Baskerville.css?h=c012648a9abe7455097863f921a20d20">
+    <link rel="stylesheet" href="../assets/css/baguetteBox.min.css?h=9bafb91fee050f02eb27a7c57845e712">
+    <link rel="preload" as="image" href="../assets/img/tour1/Pano1-preview.jpg" fetchpriority="high">
+</head>
+
+<body>  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ui-bg: rgba(8, 8, 10, 0.72);
+      --ui-border: rgba(255,255,255,0.08);
+      --text: #f2f2f2;
+      --muted: rgba(255,255,255,0.45);
+      --accent: #fff;
+    }
+
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      background: #ffffff;
+      color: var(--text);
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #panorama {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      z-index: 0;
+      transition: opacity 0.45s ease;
+    }
+
+    body.tour-interaction-active #panorama {
+      touch-action: none;
+      opacity: 1;
+    }
+
+    body:not(.tour-interaction-active) #panorama {
+      opacity: 0.58;
+    }
+
+    .pnlm-container { background: #000 !important; }
+    /* Hide default zoom / compass / fullscreen only (not hotspot layer) */
+    .pnlm-zoom-in, .pnlm-zoom-out, .pnlm-fullscreen-toggle-button, .pnlm-compass {
+      display: none !important;
+    }
+
+    .immersive-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .chrome-top {
+      pointer-events: none;
+      padding: max(12px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 8px max(16px, env(safe-area-inset-left));
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      transition: opacity 0.5s ease;
+    }
+
+    body.chrome-hidden .chrome-top { opacity: 0.2; }
+    body.chrome-hidden .chrome-top:hover { opacity: 1; }
+
+    body:not(.tour-interaction-active) .chrome-top .toolbar,
+    body:not(.tour-interaction-active) .chrome-top .chrome-badge {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    body:not(.tour-interaction-active) #panorama,
+    body:not(.tour-interaction-active) #panorama .pnlm-container {
+      pointer-events: none !important;
+    }
+
+    .tour-interaction-blocker {
+      position: fixed;
+      inset: 0;
+      z-index: 15;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: default;
+      pointer-events: auto;
+      transition: background 0.45s ease, opacity 0.45s ease;
+    }
+
+    .tour-interaction-blocker.is-hidden {
+      display: none;
+    }
+
+    .tour-mode-bar {
+      pointer-events: auto;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 520;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    }
+
+    .btn-tour-mode {
+      min-width: 6.5rem;
+      padding: 10px 18px;
+      font-size: 0.72rem;
+    }
+
+    .btn-tour-mode[hidden] {
+      display: none;
+    }
+
+    body.tour-is-embedded .tour-mode-bar {
+      display: none;
+    }
+
+    .chrome-badge {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 100px;
+      background: var(--ui-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--ui-border);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      max-width: min(55vw, 280px);
+    }
+
+    .chrome-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    #current-scene-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .toolbar {
+      pointer-events: auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .btn-ui {
+      appearance: none;
+      border: 1px solid var(--ui-border);
+      background: var(--ui-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .btn-ui:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .btn-ui:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 2px;
+    }
+
+    .btn-ui-icon {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      min-height: 40px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-ui-icon svg {
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .btn-compass {
+      width: 44px;
+      min-width: 44px;
+      overflow: visible;
+    }
+
+    /* Rotates with yaw: arrow + N point toward world north in the panorama */
+    .compass-dial {
+      width: 32px;
+      height: 32px;
+      display: block;
+      transform-origin: 50% 50%;
+      transition: transform 0.08s linear;
+    }
+
+    .nav-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      pointer-events: none;
+    }
+
+    .nav-backdrop.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .nav-panel {
+      position: fixed;
+      z-index: 101;
+      top: 0;
+      right: 0;
+      width: min(100%, 380px);
+      height: 100%;
+      height: 100dvh;
+      max-height: 100dvh;
+      background: rgba(12, 12, 14, 0.96);
+      border-left: 1px solid var(--ui-border);
+      box-shadow: -20px 0 60px rgba(0,0,0,0.5);
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      display: flex;
+      flex-direction: column;
+      padding: max(16px, env(safe-area-inset-top)) 0 max(16px, env(safe-area-inset-bottom));
+      pointer-events: auto;
+    }
+
+    .nav-backdrop.is-open .nav-panel { transform: translateX(0); }
+
+    @media (max-width: 520px) {
+      .nav-panel {
+        width: 100%;
+        border-left: none;
+        transform: translateY(100%);
+        top: auto;
+        bottom: 0;
+        height: min(72vh, 560px);
+        border-radius: 16px 16px 0 0;
+        border-top: 1px solid var(--ui-border);
+      }
+      .nav-backdrop.is-open .nav-panel { transform: translateY(0); }
+    }
+
+    .nav-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px 16px;
+      border-bottom: 1px solid var(--ui-border);
+    }
+
+    .nav-panel-title {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .btn-close {
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 4px 8px;
+      margin: -4px -8px 0 0;
+    }
+
+    .btn-close:hover { color: var(--text); }
+
+    .panel-page {
+      display: none;
+      flex: 1;
+      overflow: hidden;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .panel-page.is-visible { display: flex; }
+
+    .scene-list {
+      overflow-y: auto;
+      padding: 16px;
+      flex: 1;
+    }
+
+    .scene-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 6px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      color: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .scene-item:hover { background: rgba(255,255,255,0.07); }
+    .scene-item.active {
+      border-color: rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .scene-item-title { font-size: 0.9rem; font-weight: 500; }
+    .scene-item-sub { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+    .scene-num {
+      font-size: 0.65rem;
+      font-family: ui-monospace, monospace;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+    .scene-item.active .scene-num { color: var(--text); }
+
+    /* PNG floor plan + HTML markers (no SVG transform glitches) */
+    .map-panel-inner {
+      padding: 16px;
+      flex: 1;
+      overflow: auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .floorplan-stage {
+      position: relative;
+      display: inline-block;
+      max-width: 100%;
+      line-height: 0;
+    }
+
+    .floorplan-stage img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .floorplan-placeholder {
+      display: block;
+      width: 100%;
+      min-height: 200px;
+      max-height: 320px;
+      background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+      border: 1px dashed var(--ui-border);
+      border-radius: 8px;
+    }
+
+    .floorplan-markers {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .plan-marker {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      width: 28px;
+      height: 28px;
+      margin: 0;
+      padding: 0;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-radius: 50%;
+      background: rgba(20,20,22,0.85);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+    }
+
+    .plan-marker:hover {
+      border-color: rgba(255,255,255,0.7);
+      background: rgba(40,40,44,0.95);
+      color: var(--text);
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.12);
+    }
+
+    .plan-marker.active {
+      background: #fff;
+      border-color: #fff;
+      color: #000;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.2);
+    }
+
+    .map-hint {
+      padding: 12px 20px 0;
+      font-size: 0.7rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* First-load progress */
+    .load-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      background: rgba(255, 255, 255, 0.98);
+      color: #111111;
+      transition: opacity 0.45s ease, visibility 0.45s ease;
+    }
+
+    .load-overlay.is-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .load-overlay p {
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(0, 0, 0, 0.5);
+    }
+
+    .load-track {
+      width: min(88vw, 320px);
+      height: 6px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.06);
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .load-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 6px;
+      background: linear-gradient(90deg, rgba(0,0,0,0.25), #111111, rgba(0,0,0,0.25));
+      background-size: 200% 100%;
+      transition: width 0.25s ease-out;
+      animation: load-shimmer 1.2s ease-in-out infinite;
+    }
+
+    @keyframes load-shimmer {
+      0% { background-position: 100% 0; }
+      100% { background-position: -100% 0; }
+    }
+
+    .load-overlay.is-done .load-fill {
+      animation: none;
+      width: 100% !important;
+      background: rgba(0, 0, 0, 0.85);
+    }
+
+    /* Plan editor (?planEdit=1) */
+    .plan-edit-panel {
+      padding: 12px 16px 16px;
+      border-bottom: 1px solid var(--ui-border);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .plan-edit-panel strong { color: var(--text); }
+
+    .plan-edit-intro {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-bottom: 10px;
+    }
+
+    .plan-edit-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .plan-edit-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .plan-edit-select {
+      flex: 1;
+      min-width: 160px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--ui-border);
+      background: rgba(0,0,0,0.4);
+      color: var(--text);
+      font-size: 0.85rem;
+    }
+
+    .plan-edit-tip {
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin: 8px 0 6px;
+      line-height: 1.4;
+    }
+
+    .plan-edit-tip a {
+      color: #8cb4ff;
+      cursor: pointer;
+    }
+
+    .plan-edit-output {
+      width: 100%;
+      min-height: 72px;
+      max-height: 120px;
+      padding: 8px;
+      font-size: 0.65rem;
+      font-family: ui-monospace, monospace;
+      border-radius: 8px;
+      border: 1px solid var(--ui-border);
+      background: rgba(0,0,0,0.5);
+      color: var(--muted);
+      resize: vertical;
+    }
+
+    .floorplan-stage.plan-edit-cursor img {
+      cursor: crosshair;
+      pointer-events: auto; /* required so ?planEdit=1 clicks reach the image */
+    }
+  </style>
+<body>
+
+  <div class="load-overlay" id="load-overlay" aria-live="polite" aria-busy="true">
+    <p id="load-status">Loading panorama…</p>
+    <div class="load-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="load-track">
+      <div class="load-fill" id="load-fill"></div>
+    </div>
+  </div>
+
+  <div id="panorama" role="application" aria-label="360 degree panorama"></div>
+  <div class="tour-interaction-blocker" id="tour-blocker" aria-hidden="false"></div>
+
+  <div class="immersive-layer">
+    <div class="chrome-top">
+      <div class="chrome-badge">
+        <span class="dot" aria-hidden="true"></span>
+        <span id="current-scene-name">Loading…</span>
+      </div>
+      <div class="toolbar">
+        <button type="button" class="btn-ui" id="btn-scenes" aria-expanded="false" aria-controls="nav-panel">Scenes</button>
+        <button type="button" class="btn-ui" id="btn-plan" aria-expanded="false" aria-controls="nav-panel">Plan</button>
+        <button type="button" class="btn-ui btn-ui-icon" id="btn-zoom-in" title="Zoom in" aria-label="Zoom in">
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5v11M2.5 8h11" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round"/></svg>
+        </button>
+        <button type="button" class="btn-ui btn-ui-icon" id="btn-zoom-out" title="Zoom out" aria-label="Zoom out">
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round"/></svg>
+        </button>
+        <button type="button" class="btn-ui btn-ui-icon btn-compass" id="btn-compass" aria-label="Compass: red arrow points toward north" title="North">
+          <svg class="compass-dial" id="compass-dial" viewBox="0 0 40 40" width="32" height="32" aria-hidden="true">
+            <circle cx="20" cy="20" r="18" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+            <text x="20" y="11" text-anchor="middle" fill="#fff" font-size="9" font-weight="700" font-family="system-ui,sans-serif">N</text>
+            <text x="33" y="23" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="7" font-family="system-ui,sans-serif">E</text>
+            <text x="20" y="36" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="7" font-family="system-ui,sans-serif">S</text>
+            <text x="7" y="23" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="7" font-family="system-ui,sans-serif">W</text>
+            <line x1="20" y1="21" x2="20" y2="14.5" stroke="#ff5c5c" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M20 6.5 L15.5 15.5 L24.5 15.5 Z" fill="#ff5c5c"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="tour-mode-bar">
+    <button type="button" class="btn-ui btn-tour-mode" id="btn-tour-start">Start</button>
+    <button type="button" class="btn-ui btn-tour-mode" id="btn-tour-stop" hidden>Stop</button>
+  </div>
+
+  <div class="nav-backdrop" id="nav-backdrop" aria-hidden="true">
+    <div class="nav-panel" id="nav-panel" role="dialog" aria-modal="true" aria-labelledby="nav-panel-title">
+      <div class="nav-panel-header">
+        <h2 class="nav-panel-title" id="nav-panel-title">Scenes</h2>
+        <button type="button" class="btn-close" id="btn-close-nav" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="panel-page is-visible" id="panel-scenes" data-panel="scenes">
+        <nav class="scene-list" id="scene-list" aria-label="Scenes"></nav>
+      </div>
+
+      <div class="panel-page" id="panel-plan" data-panel="plan" hidden>
+        <div class="plan-edit-panel" id="plan-edit-panel" hidden>
+          <p class="plan-edit-intro"><strong>Mark viewpoints</strong> — choose a scene, then <strong>click</strong> the plan where that 360° was taken. <strong>Drag</strong> a dot to adjust.</p>
+          <div class="plan-edit-row">
+            <span class="plan-edit-label">Scene</span>
+            <select id="plan-edit-scene" class="plan-edit-select" aria-label="Scene to place on plan"></select>
+          </div>
+          <p class="plan-edit-tip"><a id="plan-edit-copy" role="button" tabindex="0">Copy markers code</a> → paste into <code>FLOOR_PLAN.markers</code> in your script. Remove <code>?planEdit=1</code> from the URL when done.</p>
+          <textarea id="plan-edit-output" class="plan-edit-output" readonly aria-label="Generated markers"></textarea>
+        </div>
+        <p class="map-hint" id="floorplan-hint"></p>
+        <div class="map-panel-inner">
+          <div class="floorplan-stage" id="floorplan-stage">
+            <img id="floorplan-img" alt="" style="display:none;">
+            <div class="floorplan-placeholder" id="floorplan-placeholder" aria-hidden="true"></div>
+            <div class="floorplan-markers" id="floorplan-markers"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    'use strict';
+
+    /** Config — full notes: 360-TOUR-GUIDE.md | ?checkTour=1 | ?planEdit=1 */
+    var TOUR_IMAGE_BASE_URL = '../assets/img/tour1/';
+    var TOUR_IMAGE_EXT = '.jpg';
+    var NUM_SCENES = 6;
+    var FIRST_SCENE = 'scene1';
+    /** Low-res JPEG shown while full pano decodes (Pano1-preview.jpg, …) */
+    var TOUR_PREVIEW_SUFFIX = '-preview.jpg';
+    var HFOV_MIN = 16;
+    var HFOV_MAX = 120;
+    var DEFAULT_HFOV = 95;
+    var ZOOM_STEP = 6;
+
+    function tourBase() {
+      var u = TOUR_IMAGE_BASE_URL && String(TOUR_IMAGE_BASE_URL).trim();
+      return u ? u.replace(/\/?$/, '/') : (location.origin.replace(/\/$/, '') + '/tour1/');
+    }
+    function tourImageUrl(name) {
+      return tourBase() + String(name).replace(/^\//, '');
+    }
+    function tourPreviewUrl(panoIndex) {
+      if (!TOUR_PREVIEW_SUFFIX) return null;
+      return tourImageUrl('Pano' + panoIndex + TOUR_PREVIEW_SUFFIX);
+    }
+    function prefetchImage(url, done) {
+      if (!url) {
+        if (done) done();
+        return;
+      }
+      var img = new Image();
+      img.onload = img.onerror = function () {
+        if (done) done();
+      };
+      img.src = url;
+    }
+    function prefetchRemainingScenes() {
+      var ids = Object.keys(SCENES).filter(function (id) {
+        return id !== FIRST_SCENE;
+      });
+      var index = 0;
+      function next() {
+        if (index >= ids.length) return;
+        var url = SCENES[ids[index]].panorama;
+        index += 1;
+        prefetchImage(url, function () {
+          if (window.requestIdleCallback) {
+            requestIdleCallback(next, { timeout: 2000 });
+          } else {
+            setTimeout(next, 120);
+          }
+        });
+      }
+      next();
+    }
+
+    var PLAN_EDIT = /[?&]planEdit=1(?:&|$)/.test(location.search);
+    var CHECK_TOUR = /[?&]checkTour=1(?:&|$)/.test(location.search);
+
+    var SCENES = {};
+    var n = NUM_SCENES;
+    var i, sid, hs;
+    for (i = 1; i <= n; i++) {
+      sid = 'scene' + i;
+      hs = [];
+      if (n > 1) {
+        if (i === 1) hs.push({ pitch: -5, yaw: 90, type: 'scene', sceneId: 'scene2', text: '→ 2' });
+        else if (i === n) hs.push({ pitch: -5, yaw: 0, type: 'scene', sceneId: 'scene' + (n - 1), text: '← ' + (n - 1) });
+        else {
+          hs.push({ pitch: -5, yaw: 0, type: 'scene', sceneId: 'scene' + (i - 1), text: '← ' + (i - 1) });
+          hs.push({ pitch: -5, yaw: 180, type: 'scene', sceneId: 'scene' + (i + 1), text: '→ ' + (i + 1) });
+        }
+      }
+      SCENES[sid] = {
+        title: 'Viewpoint ' + i,
+        subtitle: 'Pano' + i,
+        panorama: tourImageUrl('Pano' + i + TOUR_IMAGE_EXT),
+        yaw: (i % 2 === 1) ? 0 : 180,
+        pitch: 0,
+        hfov: DEFAULT_HFOV,
+        hotSpots: hs
+      };
+    }
+
+    var FLOOR_PLAN = { image: tourImageUrl('Floor1.png'), markers: [] };
+    var step = n > 1 ? 76 / (n - 1) : 0;
+    for (i = 1; i <= n; i++) {
+      FLOOR_PLAN.markers.push({
+        sceneId: 'scene' + i,
+        x: Math.round((12 + (i - 1) * step) * 10) / 10,
+        y: 50,
+        label: String(i)
+      });
+    }
+
+    var config = {
+      default: {
+        firstScene: FIRST_SCENE,
+        sceneFadeDuration: 1200,
+        autoLoad: true,
+        minHfov: HFOV_MIN,
+        maxHfov: HFOV_MAX,
+        hfov: DEFAULT_HFOV,
+        showControls: false,
+        showFullscreenCtrl: false,
+        showZoomCtrl: false,
+        compass: false
+      },
+      scenes: {}
+    };
+    Object.keys(SCENES).forEach(function (id) {
+      var s = SCENES[id];
+      var sceneNum = parseInt(id.replace(/\D/g, ''), 10);
+      var sceneCfg = {
+        type: 'equirectangular',
+        panorama: s.panorama,
+        yaw: s.yaw,
+        pitch: s.pitch,
+        hfov: s.hfov,
+        hotSpots: s.hotSpots || []
+      };
+      var preview = tourPreviewUrl(sceneNum);
+      if (preview) sceneCfg.preview = preview;
+      config.scenes[id] = sceneCfg;
+    });
+
+    function $id(id) { return document['getElementById'](id); }
+
+    function esc(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+    }
+
+    function renderSceneList() {
+      var nav = $id('scene-list');
+      if (!nav) return;
+      nav.innerHTML = '';
+      var ki, sceneId, s, b, num;
+      for (ki = 1; ki <= n; ki++) {
+        sceneId = 'scene' + ki;
+        s = SCENES[sceneId];
+        if (!s) continue;
+        b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'scene-item' + (sceneId === FIRST_SCENE ? ' active' : '');
+        b.dataset.sceneId = sceneId;
+        b.id = 'item-' + sceneId;
+        num = ki;
+        b.innerHTML = '<div><div class="scene-item-title">' + esc(s.title) + '</div><div class="scene-item-sub">' + esc(s.subtitle) + '</div></div><span class="scene-num">' + (num < 10 ? '0' : '') + num + '</span>';
+        nav.appendChild(b);
+      }
+    }
+
+    function runPathCheck() {
+      var ov = $id('load-overlay');
+      if (ov) ov.style.display = 'none';
+      var pan = $id('panorama');
+      if (pan) pan.style.display = 'none';
+      var imm = document.querySelector('.immersive-layer');
+      if (imm) imm.style.display = 'none';
+      var nb = $id('nav-backdrop');
+      if (nb) nb.style.display = 'none';
+
+      var baseUsed = tourBase();
+
+      var box = document.createElement('div');
+      box.style.cssText = 'position:fixed;inset:0;z-index:2147483647;overflow:auto;background:#0a0a0c;color:#e8e8e8;padding:22px 20px 48px;font:15px/1.5 system-ui,sans-serif;';
+      box.innerHTML =
+        '<h1 style="margin:0 0 10px;font-size:1.2rem">Verify tour image paths</h1>' +
+        '<p style="margin:0 0 14px;opacity:.88">Remove <code>?checkTour=1</code> from the URL when finished.</p>' +
+        '<p style="margin:0 0 6px"><b>Resolved folder</b> (edit <code>TOUR_IMAGE_BASE_URL</code> in script if wrong):</p>' +
+        '<code style="display:block;word-break:break-all;background:#1a1a1f;padding:10px 12px;border-radius:8px;margin-bottom:18px;font-size:13px">' + baseUsed + '</code>' +
+        '<p style="margin:0 0 12px;opacity:.85"><b>OK</b> = browser loaded the file. <b>FAIL</b> = 404 or wrong folder name (<code>tour1</code> vs <code>Tour1</code> on Linux).</p>' +
+        '<table style="width:100%;max-width:920px;border-collapse:collapse;font-size:14px"><thead><tr style="text-align:left;border-bottom:1px solid #333"><th style="padding:10px 8px">File</th><th style="padding:10px 8px">Full URL (open in new tab)</th><th style="padding:10px 8px;width:72px">Test</th></tr></thead><tbody id="tour-chk-rows"></tbody></table>' +
+        '<h2 style="margin:26px 0 10px;font-size:1rem">How to verify manually</h2>' +
+        '<ol style="margin:0;padding-left:22px;max-width:700px;opacity:.9">' +
+        '<li style="margin:6px 0">Click each URL — the WebP must display.</li>' +
+        '<li style="margin:6px 0"><b>F12</b> → <b>Network</b> → reload → find <code>Pano1.webp</code> → Status must be <b>200</b> (not 404).</li>' +
+        '<li style="margin:6px 0">On the server, folder + file names must match the URL exactly (including capitals).</li>' +
+        '<li style="margin:6px 0">If <code>/tour1/</code> fails, put WebPs in that folder <i>or</i> set <code>TOUR_IMAGE_BASE_URL</code>, e.g. <code>http://192.168.0.180:8000/assets/tour1/</code></li></ol>';
+      document.body.appendChild(box);
+
+      var tb = $id('tour-chk-rows');
+      var files = [];
+      for (i = 1; i <= n; i++) files.push('Pano' + i + TOUR_IMAGE_EXT);
+      files.push('Floor1.png');
+      files.forEach(function (f) {
+        var url = tourImageUrl(f);
+        var tr = document.createElement('tr');
+        tr.style.borderTop = '1px solid #252528';
+        var td0 = document.createElement('td');
+        td0.style.padding = '10px 8px';
+        td0.textContent = f;
+        var td1 = document.createElement('td');
+        td1.style.padding = '10px 8px';
+        td1.style.wordBreak = 'break-all';
+        td1.style.fontSize = '12px';
+        var a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.style.color = '#7eb8ff';
+        a.textContent = url;
+        td1.appendChild(a);
+        var td2 = document.createElement('td');
+        td2.style.padding = '10px 8px';
+        td2.textContent = '…';
+        tr.appendChild(td0);
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tb.appendChild(tr);
+        var im = new Image();
+        im.onload = function () { td2.innerHTML = '<b style="color:#6d6">OK</b>'; };
+        im.onerror = function () { td2.innerHTML = '<b style="color:#d66">FAIL</b>'; };
+        im.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_pathcheck=' + Date.now();
+      });
+
+      var altCap = window.location.origin.replace(/\/$/, '') + '/Tour1/Pano1.png';
+      if (baseUsed.indexOf('/tour1/') >= 0 && baseUsed.indexOf('/Tour1/') < 0) {
+        var note = document.createElement('div');
+        note.style.cssText = 'margin-top:22px;padding:14px;background:#1a1510;border-radius:8px;max-width:720px;font-size:.9rem';
+        note.innerHTML = 'Linux servers are <b>case-sensitive</b>. If all FAIL, try capital T: <a href="' + altCap + '" target="_blank" rel="noopener" style="color:#9cf;word-break:break-all">' + altCap + '</a><br><br>If that works, use:<br><code style="display:block;margin-top:8px;padding:8px;background:#000;border-radius:6px;font-size:12px">TOUR_IMAGE_BASE_URL = \'' + window.location.origin.replace(/\/$/, '') + '/Tour1/\';</code>';
+        box.appendChild(note);
+      }
+    }
+
+  if (CHECK_TOUR) {
+    runPathCheck();
+    return;
+  }
+
+  renderSceneList();
+
+  var inIframe = window.parent !== window;
+  var tourInteractionActive = false;
+
+  if (inIframe) {
+    document.body.classList.add('tour-is-embedded');
+  }
+
+  function notifyParentTourMode(active) {
+    if (!inIframe) return;
+    try {
+      window.parent.postMessage({ type: 'panorama-tour-mode', active: active }, '*');
+    } catch (e) {}
+  }
+
+  function setTourInteraction(active) {
+    tourInteractionActive = active;
+    document.body.classList.toggle('tour-interaction-active', active);
+    $id('tour-blocker').classList.toggle('is-hidden', active);
+    $id('tour-blocker').setAttribute('aria-hidden', active ? 'true' : 'false');
+    if (!inIframe) {
+      $id('btn-tour-start').hidden = active;
+      $id('btn-tour-stop').hidden = !active;
+    }
+    notifyParentTourMode(active);
+  }
+
+  if (!inIframe) {
+    $id('btn-tour-start').addEventListener('click', function () {
+      setTourInteraction(true);
+      bumpChrome();
+    });
+
+    $id('btn-tour-stop').addEventListener('click', function () {
+      if ($id('nav-backdrop').classList.contains('is-open')) closeNav();
+      setTourInteraction(false);
+    });
+  }
+
+  window.addEventListener('message', function (e) {
+    if (!e.data || e.data.type !== 'panorama-tour-set-mode') return;
+    setTourInteraction(!!e.data.active);
+    if (e.data.active) bumpChrome();
+  });
+
+  setTourInteraction(false);
+
+  var loadOverlay = $id('load-overlay');
+  var loadFill = $id('load-fill');
+  var loadTrack = $id('load-track');
+  var loadStatus = $id('load-status');
+  var fakeProgress = 0;
+  var loadTimer = setInterval(function () {
+    fakeProgress += (88 - fakeProgress) * 0.035 + Math.random() * 1.5;
+    if (fakeProgress > 82) fakeProgress = 82;
+    loadFill.style.width = fakeProgress + '%';
+    loadTrack.setAttribute('aria-valuenow', String(Math.round(fakeProgress)));
+  }, 160);
+
+  var firstPanoramaLoaded = false;
+  function finishLoadUI() {
+    clearInterval(loadTimer);
+    loadFill.style.width = '100%';
+    loadTrack.setAttribute('aria-valuenow', '100');
+    loadOverlay.classList.add('is-done');
+    loadStatus.textContent = 'Ready';
+    loadOverlay.setAttribute('aria-busy', 'false');
+    setTimeout(function () {
+      loadOverlay.classList.add('is-hidden');
+    }, 420);
+  }
+
+  var viewer = pannellum.viewer('panorama', config);
+  var currentScene = FIRST_SCENE;
+  var navOpenMode = null;
+
+  viewer.on('load', function () {
+    if (!firstPanoramaLoaded) {
+      firstPanoramaLoaded = true;
+      finishLoadUI();
+      prefetchImage(SCENES.scene2 && SCENES.scene2.panorama, prefetchRemainingScenes);
+      prefetchImage(FLOOR_PLAN.image);
+    }
+  });
+
+  var firstPanoUrl = SCENES[config.default.firstScene].panorama;
+
+  function forceDismissLoad(msg) {
+    if (firstPanoramaLoaded) return;
+    firstPanoramaLoaded = true;
+    clearInterval(loadTimer);
+    loadStatus.innerHTML = msg;
+    loadFill.style.width = '100%';
+    loadOverlay.classList.remove('is-done');
+    loadOverlay.setAttribute('aria-busy', 'false');
+    setTimeout(function () {
+      loadOverlay.classList.add('is-hidden');
+    }, 6000);
+  }
+
+  /* If Pannellum never fires "load", usually: wrong path (404), file://, or CORS */
+  setTimeout(function () {
+    if (firstPanoramaLoaded) return;
+    loadStatus.textContent = 'Still loading… (large files take longer)';
+  }, 7000);
+
+  setTimeout(function () {
+    if (firstPanoramaLoaded) return;
+    var probe = new Image();
+    probe.onload = function () { /* file reachable; Pannellum may still be decoding */ };
+    probe.onerror = function () {
+      forceDismissLoad('Panorama failed to load: <code style="font-size:.7rem;word-break:break-all">' + firstPanoUrl + '</code><br><small style="display:block;margin-top:10px;opacity:.85">Use a path relative to this HTML (e.g. tour1/Pano1.webp). Same spelling &amp; capitals as the file. Open the site via a web server (e.g. Live Preview), not as file://.</small>');
+    };
+    probe.src = firstPanoUrl;
+  }, 9000);
+
+  setTimeout(function () {
+    if (!firstPanoramaLoaded) loadStatus.textContent = 'Still waiting — check Network tab (F12) for 404 on .webp files';
+  }, 18000);
+
+  setTimeout(function () {
+    if (!firstPanoramaLoaded) {
+      forceDismissLoad('Loading timed out. In DevTools → Network, confirm <code style="font-size:.65rem">' + firstPanoUrl + '</code> returns 200 (not 404).');
+    }
+  }, 45000);
+
+  function switchScene(id) {
+    if (!SCENES[id] || id === currentScene) return;
+    viewer.loadScene(id, SCENES[id].pitch, SCENES[id].yaw, SCENES[id].hfov);
+    updateUI(id);
+    closeNav();
+  }
+
+  function updateUI(id) {
+    currentScene = id;
+    var scene = SCENES[id];
+    $id('current-scene-name').textContent = scene.title;
+    document.querySelectorAll('.scene-item').forEach(function (el) {
+      el.classList.toggle('active', el.getAttribute('data-scene-id') === id);
+    });
+    document.querySelectorAll('.plan-marker').forEach(function (el) {
+      el.classList.toggle('active', el.getAttribute('data-scene-id') === id);
+    });
+  }
+
+  function clamp(n, a, b) {
+    return Math.max(a, Math.min(b, n));
+  }
+
+  function syncPlanEditOutput() {
+    if (!PLAN_EDIT) return;
+    var ta = $id('plan-edit-output');
+    if (!ta) return;
+    var lines = FLOOR_PLAN.markers.map(function (m) {
+      var lab = m.label != null ? String(m.label) : '';
+      return '  { sceneId: \'' + m.sceneId + '\', x: ' + Number(m.x).toFixed(1) + ', y: ' + Number(m.y).toFixed(1) + ', label: \'' + lab + '\' },';
+    });
+    ta.value = 'markers: [\n' + lines.join('\n') + '\n]';
+  }
+
+  function upsertMarker(sceneId, x, y) {
+    var label = String(sceneId).replace(/^scene/i, '') || '1';
+    var idx = -1;
+    for (var i = 0; i < FLOOR_PLAN.markers.length; i++) {
+      if (FLOOR_PLAN.markers[i].sceneId === sceneId) {
+        idx = i;
+        break;
+      }
+    }
+    if (idx >= 0) {
+      FLOOR_PLAN.markers[idx].x = x;
+      FLOOR_PLAN.markers[idx].y = y;
+    } else {
+      FLOOR_PLAN.markers.push({ sceneId: sceneId, x: x, y: y, label: label });
+    }
+    buildFloorMarkers();
+    syncPlanEditOutput();
+  }
+
+  var planEditUIReady = false;
+  function initPlanEditUI() {
+    if (!PLAN_EDIT || planEditUIReady) return;
+    planEditUIReady = true;
+    var panel = $id('plan-edit-panel');
+    var sel = $id('plan-edit-scene');
+    panel.hidden = false;
+    sel.innerHTML = '';
+    Object.keys(SCENES).forEach(function (id) {
+      var o = document.createElement('option');
+      o.value = id;
+      o.textContent = SCENES[id].title + ' (' + id + ')';
+      sel.appendChild(o);
+    });
+    syncPlanEditOutput();
+    $id('plan-edit-copy').addEventListener('click', function (e) {
+      e.preventDefault();
+      syncPlanEditOutput();
+      var t = $id('plan-edit-output').value;
+      var link = $id('plan-edit-copy');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(t).then(function () {
+          var prev = link.textContent;
+          link.textContent = 'Copied!';
+          setTimeout(function () { link.textContent = prev; }, 2000);
+        }).catch(function () {});
+      }
+    });
+  }
+
+  function buildFloorMarkers() {
+    var wrap = $id('floorplan-markers');
+    var img = $id('floorplan-img');
+    wrap.innerHTML = '';
+    FLOOR_PLAN.markers.forEach(function (m) {
+      if (!SCENES[m.sceneId]) return;
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'plan-marker';
+      b.setAttribute('data-scene-id', m.sceneId);
+      b.style.left = m.x + '%';
+      b.style.top = m.y + '%';
+      b.textContent = m.label != null ? m.label : m.sceneId.replace(/scene/i, '');
+
+      if (PLAN_EDIT) {
+        b.addEventListener('mousedown', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          var moved = false;
+          var sx = e.clientX;
+          var sy = e.clientY;
+          var ox = m.x;
+          var oy = m.y;
+          function onMove(ev) {
+            if (!img || img.style.display === 'none') return;
+            var r = img.getBoundingClientRect();
+            if (Math.abs(ev.clientX - sx) + Math.abs(ev.clientY - sy) > 5) moved = true;
+            var nx = ox + ((ev.clientX - sx) / r.width) * 100;
+            var ny = oy + ((ev.clientY - sy) / r.height) * 100;
+            m.x = clamp(nx, 0, 100);
+            m.y = clamp(ny, 0, 100);
+            b.style.left = m.x + '%';
+            b.style.top = m.y + '%';
+          }
+          function onUp() {
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+            if (moved) {
+              b._skipNextClick = true;
+              syncPlanEditOutput();
+              setTimeout(function () { b._skipNextClick = false; }, 80);
+            }
+          }
+          document.addEventListener('mousemove', onMove);
+          document.addEventListener('mouseup', onUp);
+        });
+      }
+
+      b.addEventListener('click', function (e) {
+        if (PLAN_EDIT && b._skipNextClick) {
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+        switchScene(m.sceneId);
+      });
+
+      wrap.appendChild(b);
+    });
+    updateUI(currentScene);
+    syncPlanEditOutput();
+  }
+
+  function setupFloorImage() {
+    var img = $id('floorplan-img');
+    var ph = $id('floorplan-placeholder');
+    var hint = $id('floorplan-hint');
+    var stage = $id('floorplan-stage');
+
+    if (PLAN_EDIT) {
+      initPlanEditUI();
+      hint.textContent = FLOOR_PLAN.image
+        ? 'Click the plan to place the selected scene. Drag dots to adjust. Copy code when done.'
+        : 'Set FLOOR_PLAN.image to your PNG, reload with ?planEdit=1, then click the plan to mark viewpoints.';
+    } else {
+      hint.textContent = FLOOR_PLAN.image
+        ? 'Tap a marker to open that viewpoint. To place dots visually, open this page with ?planEdit=1'
+        : 'Set FLOOR_PLAN.image to your PNG path. Use ?planEdit=1 to click-and-place markers.';
+    }
+
+    if (FLOOR_PLAN.image) {
+      img.onload = function () {
+        img.style.display = 'block';
+        ph.style.display = 'none';
+        buildFloorMarkers();
+        if (PLAN_EDIT) {
+          stage.classList.add('plan-edit-cursor');
+          if (!img.dataset.planClickBound) {
+            img.dataset.planClickBound = '1';
+            img.addEventListener('click', function (e) {
+              if (!PLAN_EDIT || e.target !== img) return;
+              var sid = $id('plan-edit-scene').value;
+              var r = img.getBoundingClientRect();
+              var x = clamp(((e.clientX - r.left) / r.width) * 100, 0, 100);
+              var y = clamp(((e.clientY - r.top) / r.height) * 100, 0, 100);
+              upsertMarker(sid, x, y);
+            });
+          }
+        }
+      };
+      img.onerror = function () {
+        ph.style.display = 'block';
+        img.style.display = 'none';
+        hint.textContent = 'Floor plan failed to load. Check FLOOR_PLAN.image path.';
+      };
+      img.src = FLOOR_PLAN.image;
+      img.alt = 'Floor plan';
+    } else {
+      img.style.display = 'none';
+      ph.style.display = 'block';
+      buildFloorMarkers();
+    }
+  }
+
+  function openNav(mode) {
+    navOpenMode = mode;
+    $id('nav-backdrop').classList.add('is-open');
+    $id('nav-backdrop').setAttribute('aria-hidden', 'false');
+    $id('btn-scenes').setAttribute('aria-expanded', mode === 'scenes' ? 'true' : 'false');
+    $id('btn-plan').setAttribute('aria-expanded', mode === 'plan' ? 'true' : 'false');
+
+    var title = $id('nav-panel-title');
+    var panelScenes = $id('panel-scenes');
+    var panelPlan = $id('panel-plan');
+
+    if (mode === 'scenes') {
+      title.textContent = 'Scenes';
+      panelScenes.classList.add('is-visible');
+      panelScenes.hidden = false;
+      panelPlan.classList.remove('is-visible');
+      panelPlan.hidden = true;
+    } else {
+      title.textContent = 'Floor plan';
+      panelPlan.classList.add('is-visible');
+      panelPlan.hidden = false;
+      panelScenes.classList.remove('is-visible');
+      panelScenes.hidden = true;
+    }
+  }
+
+  function closeNav() {
+    $id('nav-backdrop').classList.remove('is-open');
+    $id('nav-backdrop').setAttribute('aria-hidden', 'true');
+    $id('btn-scenes').setAttribute('aria-expanded', 'false');
+    $id('btn-plan').setAttribute('aria-expanded', 'false');
+    navOpenMode = null;
+  }
+
+  $id('btn-scenes').addEventListener('click', function () {
+    if (navOpenMode === 'scenes') closeNav();
+    else openNav('scenes');
+  });
+  $id('btn-plan').addEventListener('click', function () {
+    if (navOpenMode === 'plan') closeNav();
+    else openNav('plan');
+  });
+  $id('btn-close-nav').addEventListener('click', closeNav);
+  $id('nav-backdrop').addEventListener('click', function (e) {
+    if (e.target.id === 'nav-backdrop') closeNav();
+  });
+
+  $id('btn-zoom-in').addEventListener('click', function () {
+    try {
+      viewer.setHfov(Math.max(HFOV_MIN, viewer.getHfov() - ZOOM_STEP));
+    } catch (e) {}
+  });
+  $id('btn-zoom-out').addEventListener('click', function () {
+    try {
+      viewer.setHfov(Math.min(HFOV_MAX, viewer.getHfov() + ZOOM_STEP));
+    } catch (e) {}
+  });
+
+  $id('scene-list').addEventListener('click', function (e) {
+    var btn = e.target.closest('.scene-item[data-scene-id]');
+    if (btn) switchScene(btn.getAttribute('data-scene-id'));
+  });
+
+  viewer.on('scenechange', function (id) { updateUI(id); });
+
+  setInterval(function () {
+    try {
+      var yaw = viewer.getYaw();
+      $id('compass-dial').style.transform = 'rotate(' + (-yaw) + 'deg)';
+    } catch (e) {}
+  }, 80);
+
+  setupFloorImage();
+
+  var hideTimer;
+  function bumpChrome() {
+    document.body.classList.remove('chrome-hidden');
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(function () {
+      if (!$id('nav-backdrop').classList.contains('is-open')) {
+        document.body.classList.add('chrome-hidden');
+      }
+    }, 4500);
+  }
+  document.addEventListener('mousemove', bumpChrome);
+  document.addEventListener('touchstart', bumpChrome, { passive: true });
+  bumpChrome();
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      if ($id('nav-backdrop').classList.contains('is-open')) {
+        closeNav();
+        return;
+      }
+      if (tourInteractionActive) setTourInteraction(false);
+    }
+  });
+  })();
+  </script>
+</body>
+    <script src="../assets/bootstrap/js/bootstrap.min.js?h=9b160b415b961aeb41b64305a23d2953"></script>
+    <script src="../assets/js/bs-init.js?h=e2b0d57f2c4a9b0d13919304f87f79ae"></script>
+    <script src="../assets/js/baguetteBox.min.js?h=add865daffd8b6e10264279f48d8ac50"></script>
+    <script src="../assets/js/template.js?h=b6c06d540ba754c2f132f5c3a82a199b"></script>
+</body>
+
+</html>
