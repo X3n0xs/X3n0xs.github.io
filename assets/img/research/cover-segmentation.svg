@@ -1,0 +1,39 @@
+<svg viewBox="0 0 640 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Segmented 3D point cloud of an urban street, top view">
+  <defs>
+    <pattern id="segDark" width="11" height="11" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.5" fill="#33333a"></circle></pattern>
+    <pattern id="segMid" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.4" fill="#a8a69f"></circle></pattern>
+    <pattern id="segTree" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.5" fill="#8f9a86"></circle></pattern>
+  </defs>
+  <rect width="640" height="400" fill="#f2f1ee"></rect>
+
+  <!-- ground / road band -->
+  <rect x="0" y="168" width="640" height="86" fill="url(#segMid)"></rect>
+
+  <!-- building footprints (top row) -->
+  <rect x="34" y="40" width="120" height="104" fill="url(#segDark)"></rect>
+  <rect x="176" y="40" width="86" height="104" fill="url(#segDark)"></rect>
+  <rect x="286" y="40" width="150" height="104" fill="url(#segDark)"></rect>
+  <rect x="458" y="40" width="150" height="104" fill="url(#segDark)"></rect>
+
+  <!-- building footprints (bottom row) -->
+  <rect x="34" y="278" width="150" height="96" fill="url(#segDark)"></rect>
+  <rect x="206" y="278" width="96" height="96" fill="url(#segDark)"></rect>
+  <rect x="324" y="278" width="130" height="96" fill="url(#segDark)"></rect>
+  <rect x="476" y="278" width="132" height="96" fill="url(#segDark)"></rect>
+
+  <!-- tree clusters along the kerb -->
+  <circle cx="120" cy="210" r="16" fill="url(#segTree)"></circle>
+  <circle cx="250" cy="212" r="14" fill="url(#segTree)"></circle>
+  <circle cx="400" cy="208" r="17" fill="url(#segTree)"></circle>
+  <circle cx="540" cy="212" r="15" fill="url(#segTree)"></circle>
+
+  <!-- camera trajectory along the street -->
+  <line x1="24" y1="228" x2="616" y2="228" stroke="#9a9994" stroke-width="2" stroke-dasharray="2 9" stroke-linecap="round"></line>
+  <g fill="#7d7c77">
+    <rect x="70" y="224" width="7" height="7"></rect>
+    <rect x="190" y="224" width="7" height="7"></rect>
+    <rect x="310" y="224" width="7" height="7"></rect>
+    <rect x="430" y="224" width="7" height="7"></rect>
+    <rect x="550" y="224" width="7" height="7"></rect>
+  </g>
+</svg>

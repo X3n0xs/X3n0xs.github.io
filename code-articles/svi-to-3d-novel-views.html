@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>SVI → 3D &amp; Novel Pedestrian Views — Monykandy</title>
+    <meta name="description" content="From sequential street-view panoramas to analysis-ready urban environments and novel eye-level views along pedestrian paths. Patent in process; public description stays high-level.">
+    <meta property="og:image" content="../assets/img/archi/picasso.png">
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css?h=a4db6ab85891bcba7fc13e8269f3233f">
+    <link rel="stylesheet" href="../assets/css/Inter.css?h=4371827078d56580d47a92719fb6854f">
+    <link rel="stylesheet" href="../assets/css/Libre%20Baskerville.css?h=c012648a9abe7455097863f921a20d20">
+    <link rel="stylesheet" href="../assets/css/baguetteBox.min.css?h=9bafb91fee050f02eb27a7c57845e712&v=unified-width">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md sticky-top shadow-sm py-md-3 navbar-arch">
+        <div class="container"><a class="navbar-brand link-dark" href="../code.html"><svg class="icon icon-tabler icon-tabler-chart-dots-3 fs-4 me-2" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M5 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M12 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M19 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M5 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M12 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M19 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M5 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M12 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M19 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                </svg>Monykandy</a><button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link link-dark active" href="../code.html">Research</a></li>
+                    <li class="nav-item"><a class="nav-link link-dark" href="../archi.html">Architecture</a></li>
+                    <li class="nav-item"><a class="nav-link link-dark" href="../contacts.html">About</a></li>
+                </ul><a class="btn btn-outline-dark rounded-0" href="../contacts.html">Get in touch</a>
+            </div>
+        </div>
+    </nav>
+    <section class="text-center py-5 article-prose">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="mb-5">
+                        <small><time datetime="2026">Core pipeline &middot; patent in process</time></small>
+                        <h1 class="my-4">SVI &#8594; 3D &amp; Novel Pedestrian Views</h1>
+                        <p class="mb-3">Use available street-view panoramas as the source, reconstruct an analysis-ready urban environment, and synthesise eye-level views along pedestrian paths where the capture fleet never stood.</p>
+                        <p class="text-muted mb-0">Monykandy Leng &middot; Southeast University</p>
+                    </div>
+                </div>
+                <div class="col-md-10 col-lg-9 col-xl-8 mx-auto" style="text-align: left;">
+                    <div>
+                        <h1>Problem</h1>
+                        <p>Street-view imagery (SVI) is abundant, but it is largely road- and vehicle-centred. Many pedestrian-relevant locations and eye-level perspectives are never photographed, so path-level urban analysis is often locked to capture poses&mdash;or forced onto heavy city models that are hard to keep current.</p>
+                        <p>The gap this work targets is <strong>viewpoint completeness</strong>: generating the missing pedestrian samples from the SVI we already have, then making those views usable for analysis.</p>
+
+                        <h1>Approach (public level)</h1>
+                        <p>From an ordered sequence of equirectangular street-view frames, the pipeline:</p>
+                        <ol>
+                            <li>Prepares multi-view observations from each panorama and recovers relative geometry along the capture path</li>
+                            <li>Assembles a coherent camera trajectory and a sparse, analysis-oriented reconstruction</li>
+                            <li>Builds a segmented street environment (buildings, ground, vegetation) suitable for measurement</li>
+                            <li><strong>Synthesises novel panoramas at pedestrian-path positions</strong> (eye-level), decoupled from where the vehicle stopped</li>
+                        </ol>
+                        <p>Downstream analyses (visibility, greenery, comfort, exposure, and related metrics) can run on those synthesised views. Any single application is an illustration of the novel-view layer&mdash;not the identity of the contribution.</p>
+                        <p class="text-muted">A related patent is in process. Public materials stay at problem / outcome / high-level design level; claim-level parameters and full implementation detail are not published here.</p>
+
+                        <figure class="my-4">
+                            <a href="../assets/img/research/diagram-reconstruction-overview.png" data-bss-baguettebox="svi-novel">
+                                <img class="img-fluid border" src="../assets/img/research/diagram-reconstruction-overview.png" alt="High-level overview of reconstruction and novel-view workflow" loading="lazy">
+                            </a>
+                            <figcaption class="text-muted small mt-2">High-level workflow &mdash; from sequential SVI to environment assembly and novel-view analysis.</figcaption>
+                        </figure>
+
+                        <h1>Method diagrams</h1>
+                        <div class="row g-3 my-2">
+                            <div class="col-12 col-md-6">
+                                <figure class="mb-0">
+                                    <a href="../assets/img/research/diagram-face-projection.png" data-bss-baguettebox="svi-novel">
+                                        <img class="img-fluid border" src="../assets/img/research/diagram-face-projection.png" alt="Multi-face projection from equirectangular imagery" loading="lazy">
+                                    </a>
+                                    <figcaption class="text-muted small mt-2">Multi-face projection &mdash; which views are kept from each 360&deg; frame.</figcaption>
+                                </figure>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <figure class="mb-0">
+                                    <a href="../assets/img/research/diagram-camera-chain.png" data-bss-baguettebox="svi-novel">
+                                        <img class="img-fluid border" src="../assets/img/research/diagram-camera-chain.png" alt="Camera-path assembly diagram" loading="lazy">
+                                    </a>
+                                    <figcaption class="text-muted small mt-2">Camera-path assembly &mdash; overlapping local links into a global trajectory.</figcaption>
+                                </figure>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <figure class="mb-0">
+                                    <a href="../assets/img/research/diagram-novel-view-solar.png" data-bss-baguettebox="svi-novel">
+                                        <img class="img-fluid border" src="../assets/img/research/diagram-novel-view-solar.png" alt="Novel-view pedestrian path rendering" loading="lazy">
+                                    </a>
+                                    <figcaption class="text-muted small mt-2">Novel-view path rendering &mdash; bridge from reconstructed scenes to path-level analysis.</figcaption>
+                                </figure>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <figure class="mb-0">
+                                    <a href="../assets/img/research/diagram-system-modules.png" data-bss-baguettebox="svi-novel">
+                                        <img class="img-fluid border" src="../assets/img/research/diagram-system-modules.png" alt="System modules overview" loading="lazy">
+                                    </a>
+                                    <figcaption class="text-muted small mt-2">System modules &mdash; how reconstruction and novel-view stages connect.</figcaption>
+                                </figure>
+                            </div>
+                        </div>
+
+                        <h1>Outputs</h1>
+                        <p>Typical products of a corridor run include a registered environment point cloud, a camera path, and novel eye-level panoramas (with sky / occlusion structure) at user-specified pedestrian positions.</p>
+
+                        <div class="row g-3 my-3">
+                            <div class="col-12 col-md-6">
+                                <figure class="mb-0">
+                                    <a href="../assets/img/research/result-environment-full.png" data-bss-baguettebox="svi-novel">
+                                        <img class="img-fluid border" src="../assets/img/research/result-environment-full.png" alt="Assembled street environment point cloud" loading="lazy">
+                                    </a>
+                                    <figcaption class="text-muted small mt-2">Assembled environment (buildings, vegetation, ground).</figcaption>
+                                </figure>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <figure class="mb-0">
+                                    <a href="../assets/img/research/result-novel-view-sky-mask.png" data-bss-baguettebox="svi-novel">
+                                        <img class="img-fluid border" src="../assets/img/research/result-novel-view-sky-mask.png" alt="Novel-view panorama with geometric sky mask" loading="lazy">
+                                    </a>
+                                    <figcaption class="text-muted small mt-2">Novel-view panorama with geometric sky / occlusion mask.</figcaption>
+                                </figure>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <figure class="mb-0">
+                                    <a href="../assets/img/research/result-georef-overlay.png" data-bss-baguettebox="svi-novel">
+                                        <img class="img-fluid border" src="../assets/img/research/result-georef-overlay.png" alt="Metric scene overlaid on map context" loading="lazy">
+                                    </a>
+                                    <figcaption class="text-muted small mt-2">Metric registration in map context (coarse capture metadata used only where appropriate).</figcaption>
+                                </figure>
+                            </div>
+                        </div>
+
+                        <h1>Contribution</h1>
+                        <p><strong>Geometry-enabled novel pedestrian views from available SVI</strong>&mdash;so path-level measurement is not limited to fleet poses. Related conference framing appears in the GISA 2025 segmentation work; this page emphasises the reconstruction &#8594; novel-view capability that supports further analysis.</p>
+
+                        <h1>Code</h1>
+                        <p>Implementation lives in a <strong>private</strong> repository (patent process). Access can be shared with supervisors on request.</p>
+                        <p>
+                            <a href="https://github.com/X3n0xs/SVI_to_3d_code" rel="noopener noreferrer" target="_blank">github.com/X3n0xs/SVI_to_3d_code</a>
+                            &middot;
+                            <a href="gisa-3d-segmentation.html">GISA 2025 overview</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="text-center bg-body-tertiary">
+        <div class="container py-4 py-lg-5">
+            <h1 class="fs-4 text-body mb-4"> <svg class="icon icon-tabler icon-tabler-chart-dots-3 fs-4 text-body me-2" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M5 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M12 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M19 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M5 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M12 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M19 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M5 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M12 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M19 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                </svg>Monykandy</h1>
+            <ul class="list-inline">
+                <li class="list-inline-item me-3"><a class="link-body-emphasis" href="../code.html">Research</a></li>
+                <li class="list-inline-item me-3"><a class="link-body-emphasis" href="../archi.html">Architecture</a></li>
+                <li class="list-inline-item me-3"><a class="link-body-emphasis" href="../contacts.html">About</a></li>
+            </ul>
+            <p class="text-muted mb-3">Copyright &copy; 2026 Monykandy</p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a class="link-body-emphasis" data-github-profile href="https://github.com/X3n0xs" rel="noopener noreferrer" target="_blank" aria-label="GitHub"><svg class="icon icon-tabler icon-tabler-brand-github" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+                        </svg></a></li>
+            </ul>
+        </div>
+    </footer>
+    <script src="../assets/bootstrap/js/bootstrap.min.js?h=9b160b415b961aeb41b64305a23d2953"></script>
+    <script src="../assets/js/bs-init.js?h=e2b0d57f2c4a9b0d13919304f87f79ae"></script>
+    <script src="../assets/js/baguetteBox.min.js?h=add865daffd8b6e10264279f48d8ac50"></script>
+    <script src="../assets/js/template.js?h=b6c06d540ba754c2f132f5c3a82a199b"></script>
+</body>
+
+</html>

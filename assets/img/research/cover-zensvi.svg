@@ -1,0 +1,49 @@
+<svg viewBox="0 0 640 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Panoramic street-view frame with segmented regions and capture points along a route">
+  <rect width="640" height="400" fill="#f2f1ee"></rect>
+
+  <!-- equirectangular panorama frame -->
+  <rect x="60" y="66" width="520" height="158" fill="#e6e4de" stroke="#2a2a30" stroke-width="1.5"></rect>
+  <!-- sky already light; building silhouette row (segmented tones) -->
+  <g>
+    <rect x="60" y="120" width="60" height="60" fill="#4a4a50"></rect>
+    <rect x="120" y="104" width="48" height="76" fill="#6f6e6b"></rect>
+    <rect x="168" y="132" width="70" height="48" fill="#8f8e89"></rect>
+    <rect x="238" y="98" width="54" height="82" fill="#4a4a50"></rect>
+    <rect x="292" y="124" width="66" height="56" fill="#6f6e6b"></rect>
+    <rect x="358" y="110" width="50" height="70" fill="#8f8e89"></rect>
+    <rect x="408" y="130" width="72" height="50" fill="#4a4a50"></rect>
+    <rect x="480" y="102" width="52" height="78" fill="#6f6e6b"></rect>
+    <rect x="532" y="126" width="48" height="54" fill="#8f8e89"></rect>
+  </g>
+  <!-- road band + horizon -->
+  <rect x="60" y="180" width="520" height="44" fill="#b6b4ae"></rect>
+  <line x1="60" y1="180" x2="580" y2="180" stroke="#2a2a30" stroke-width="1"></line>
+  <!-- panorama column guides -->
+  <g stroke="#f2f1ee" stroke-width="1" opacity="0.5">
+    <line x1="147" y1="66" x2="147" y2="224"></line>
+    <line x1="234" y1="66" x2="234" y2="224"></line>
+    <line x1="321" y1="66" x2="321" y2="224"></line>
+    <line x1="408" y1="66" x2="408" y2="224"></line>
+    <line x1="495" y1="66" x2="495" y2="224"></line>
+  </g>
+
+  <!-- 360 sphere glyph -->
+  <g transform="translate(540,102)">
+    <circle r="22" fill="#f2f1ee" stroke="#9a9994" stroke-width="1.6"></circle>
+    <ellipse rx="22" ry="8" fill="none" stroke="#9a9994" stroke-width="1.2"></ellipse>
+    <line x1="0" y1="-22" x2="0" y2="22" stroke="#9a9994" stroke-width="1.2"></line>
+    <text y="4" text-anchor="middle" font-family="'Inter',sans-serif" font-size="10" fill="#2a2a30">360&#176;</text>
+  </g>
+
+  <!-- capture route with sampling points -->
+  <path d="M84 306 Q322 268 560 300" fill="none" stroke="#9a9994" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round"></path>
+  <g fill="#2a2a30">
+    <rect x="80" y="302" width="8" height="8"></rect>
+    <rect x="176" y="292" width="8" height="8"></rect>
+    <rect x="276" y="284" width="8" height="8"></rect>
+    <rect x="376" y="284" width="8" height="8"></rect>
+    <rect x="472" y="290" width="8" height="8"></rect>
+    <rect x="556" y="300" width="8" height="8"></rect>
+  </g>
+  <text x="84" y="342" font-family="'Inter',sans-serif" font-size="12" fill="#6f6e6b">capture route &#183; sampled panoramas</text>
+</svg>

@@ -1,0 +1,299 @@
+﻿<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Research - Monykandy</title>
+    <meta name="description" content="M.Arch candidate at Southeast University. Research on SVI→3D reconstruction, street-photo risk mapping, and pedestrian solar exposure. B.A. Architecture, AUPP (2019–2024).">
+    <meta property="og:title" content="Research - Monykandy">
+    <meta property="og:description" content="Related pipelines from street-level / 360Â° imagery: SVI→3D environments, facade fall-zone risk, and path-level solar exposure.">
+    <meta property="og:image" content="assets/img/archi/biocityfacade.jpg">
+    <meta property="og:image:alt" content="Architecture portfolio - Bio-City facade">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css?h=a4db6ab85891bcba7fc13e8269f3233f">
+    <link rel="stylesheet" href="assets/css/Inter.css?h=4371827078d56580d47a92719fb6854f">
+    <link rel="stylesheet" href="assets/css/Libre%20Baskerville.css?h=c012648a9abe7455097863f921a20d20">
+    <link rel="stylesheet" href="assets/css/baguetteBox.min.css?h=9bafb91fee050f02eb27a7c57845e712&v=map-hero2">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md sticky-top shadow-sm py-md-3 navbar-arch">
+        <div class="container"><a class="navbar-brand link-dark" href="code.html"><svg class="icon icon-tabler icon-tabler-chart-dots-3 fs-4 me-2" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M5 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M12 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M19 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M5 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M12 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M19 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M5 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M12 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M19 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                </svg>Monykandy</a><button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link link-dark active" href="code.html">Research</a></li>
+                    <li class="nav-item"><a class="nav-link link-dark" href="archi.html">Architecture</a></li>
+                    <li class="nav-item"><a class="nav-link link-dark" href="contacts.html">About</a></li>
+                </ul><a class="btn btn-outline-dark rounded-0" href="contacts.html">Get in touch</a>
+            </div>
+        </div>
+    </nav>
+    <section class="research-hero research-hero--landing research-hero--with-map text-start" id="research-map">
+        <div class="container">
+            <div class="research-hero__map" aria-label="Research map">
+                <svg viewBox="29 19 842 250" role="img" aria-labelledby="rm-title rm-desc" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+                    <title id="rm-title">Research map</title>
+                    <desc id="rm-desc">Street-level imagery feeds three separate lines: SVI to 3D with novel pedestrian views, facade fall-zone risk, and solar exposure analysis.</desc>
+                    <defs>
+                        <marker id="rm-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                            <path d="M0 0 L10 5 L0 10 z" fill="var(--site-accent, #9a9994)"></path>
+                        </marker>
+                    </defs>
+
+                    <rect x="250" y="24" width="400" height="44" fill="var(--site-paper-elevated, #faf9f7)" stroke="#cfcdc8" stroke-width="1"></rect>
+                    <text x="450" y="52" text-anchor="middle" font-family="'Libre Baskerville',Georgia,serif" font-size="17" fill="var(--site-ink, #1e1e22)">Street-level / 360&deg; imagery</text>
+
+                    <line x1="450" y1="68" x2="450" y2="90" stroke="var(--site-accent, #9a9994)" stroke-width="2" marker-end="url(#rm-arrow)"></line>
+                    <line x1="170" y1="102" x2="170" y2="122" stroke="var(--site-accent, #9a9994)" stroke-width="2" marker-end="url(#rm-arrow)"></line>
+                    <line x1="450" y1="102" x2="450" y2="122" stroke="var(--site-accent, #9a9994)" stroke-width="2" marker-end="url(#rm-arrow)"></line>
+                    <line x1="730" y1="102" x2="730" y2="122" stroke="var(--site-accent, #9a9994)" stroke-width="2" marker-end="url(#rm-arrow)"></line>
+                    <line x1="170" y1="102" x2="730" y2="102" stroke="var(--site-accent, #9a9994)" stroke-width="2"></line>
+
+                    <a href="code-articles/svi-to-3d-novel-views.html">
+                        <rect x="30" y="122" width="260" height="140" fill="var(--site-paper-elevated, #faf9f7)" stroke="var(--site-accent, #9a9994)" stroke-width="1.5"></rect>
+                        <rect x="30" y="122" width="260" height="5" fill="var(--site-accent, #9a9994)"></rect>
+                        <text x="45" y="148" font-size="10" letter-spacing="1" fill="var(--site-accent, #9a9994)">MAIN LINE</text>
+                        <text x="45" y="172" font-family="'Libre Baskerville',Georgia,serif" font-size="15" fill="var(--site-ink, #1e1e22)">SVI &#8594; 3D &amp;</text>
+                        <text x="45" y="192" font-family="'Libre Baskerville',Georgia,serif" font-size="15" fill="var(--site-ink, #1e1e22)">novel pedestrian views</text>
+                        <text x="45" y="216" font-size="12" fill="#6f6e6b">Sequential panoramas to an</text>
+                        <text x="45" y="234" font-size="12" fill="#6f6e6b">analysis-ready environment,</text>
+                        <text x="45" y="252" font-size="12" fill="#6f6e6b">then eye-level path views.</text>
+                    </a>
+
+                    <a href="code-articles/isocarp-facade-risk.html">
+                        <rect x="320" y="122" width="260" height="140" fill="var(--site-paper-elevated, #faf9f7)" stroke="#cfcdc8" stroke-width="1"></rect>
+                        <rect x="320" y="122" width="260" height="5" fill="var(--site-accent, #9a9994)"></rect>
+                        <text x="335" y="148" font-size="10" letter-spacing="1" fill="var(--site-accent, #9a9994)">SEPARATE LINE</text>
+                        <text x="335" y="172" font-family="'Libre Baskerville',Georgia,serif" font-size="15" fill="var(--site-ink, #1e1e22)">Facade fall-zone</text>
+                        <text x="335" y="192" font-family="'Libre Baskerville',Georgia,serif" font-size="15" fill="var(--site-ink, #1e1e22)">risk</text>
+                        <text x="335" y="216" font-size="12" fill="#6f6e6b">Street photography to</text>
+                        <text x="335" y="234" font-size="12" fill="#6f6e6b">pedestrian debris-fall</text>
+                        <text x="335" y="252" font-size="12" fill="#6f6e6b">exposure bands.</text>
+                    </a>
+
+                    <a href="code-articles/article-1.html">
+                        <rect x="610" y="122" width="260" height="140" fill="var(--site-paper-elevated, #faf9f7)" stroke="#cfcdc8" stroke-width="1"></rect>
+                        <rect x="610" y="122" width="260" height="5" fill="var(--site-accent, #9a9994)"></rect>
+                        <text x="625" y="148" font-size="10" letter-spacing="1" fill="var(--site-accent, #9a9994)">SEPARATE LINE</text>
+                        <text x="625" y="172" font-family="'Libre Baskerville',Georgia,serif" font-size="15" fill="var(--site-ink, #1e1e22)">Solar exposure</text>
+                        <text x="625" y="192" font-family="'Libre Baskerville',Georgia,serif" font-size="15" fill="var(--site-ink, #1e1e22)">analysis</text>
+                        <text x="625" y="216" font-size="12" fill="#6f6e6b">Path-level sun metrics from</text>
+                        <text x="625" y="234" font-size="12" fill="#6f6e6b">panoramic and novel-view</text>
+                        <text x="625" y="252" font-size="12" fill="#6f6e6b">imagery.</text>
+                    </a>
+                </svg>
+            </div>
+            <div class="research-hero__caption">
+                <h1 class="research-hero__title">Monykandy</h1>
+                <p class="text-muted mb-2">B.A. Architecture, AUPP (2019&ndash;2024) &middot; M.Arch, Southeast University, Nanjing (2024&ndash;2027)</p>
+                <p class="text-muted mb-3">Urban analytics from street-level and 360&deg; imagery &mdash; SVI&#8594;3D, facade fall-zone risk, and solar exposure.</p>
+                <p class="mb-0">
+                    <a class="link-dark" href="assets/docs/CV_Leng-Monykandy.pdf?v=20260721e" target="_blank" rel="noopener noreferrer">CV</a>
+                    &middot;
+                    <a class="link-dark" data-github-profile href="https://github.com/X3n0xs" rel="noopener noreferrer" target="_blank">GitHub</a>
+                    &middot;
+                    <a class="link-dark" href="mailto:monykandyleng@gmail.com">Email</a>
+                </p>
+            </div>
+        </div>
+    </section>
+    <section class="site-section py-3 py-lg-4" id="phd-aims">
+        <div class="container">
+            <div class="mb-4 reveal">
+                <h2>Research interests &amp; PhD aims</h2>
+                <hr class="section-rule">
+            </div>
+            <div class="row g-4 reveal">
+                <div class="col-12 col-lg-6">
+                    <h3 class="h5 mb-3">Interests</h3>
+                    <ul class="text-muted mb-0 ps-3">
+                        <li class="mb-2">Dense 3D reconstruction from sequential 360&deg; street-view imagery, with architectural judgment on form and occlusion</li>
+                        <li class="mb-2">Novel pedestrian-path views from reconstructed scenes &mdash; filling SVI viewpoint gaps for path-level analysis</li>
+                        <li class="mb-0">Urban risk and street-space analysis from street-level photography when a full 3D model is not the starting point</li>
+                    </ul>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <h3 class="h5 mb-3">PhD aims</h3>
+                    <p class="text-muted mb-0">I am preparing PhD applications to deepen geometry- and vision-based methods for measuring cities from everyday imagery &mdash; connecting reconstruction, semantics, and application-level urban questions. I look for groups where spatial computing, photogrammetry / 3D vision, and urban analytics meet, and where an architecture background is an asset rather than a side track.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="site-section py-3 py-lg-4" id="presentations">
+        <div class="container">
+            <div class="mb-4 reveal">
+                <h2>Presentations</h2>
+                <hr class="section-rule">
+                <p class="text-muted mb-0 mt-3">Conference work from 2025 &mdash; manuscripts, slides, and abstracts.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-12 col-lg-6 reveal">
+                    <article class="about-credentials h-100">
+                        <h3 class="h5 mb-2">Reconstructing 3D Segmentation of the Urban Environment using Street View Images</h3>
+                        <p class="text-muted mb-3">34th GISA Annual Conference &middot; 2025 &middot; Toyama, Japan</p>
+                        <p class="mb-0">
+                            <a class="link-dark" href="assets/docs/GISA-2025-Manuscript_Leng-Monykandy.pdf" target="_blank" rel="noopener noreferrer">Manuscript</a>
+                            &middot;
+                            <a class="link-dark" href="assets/docs/GISA-2025-Presentation_Leng-Monykandy.pdf" target="_blank" rel="noopener noreferrer">Slides (PDF)</a>
+                        </p>
+                    </article>
+                </div>
+                <div class="col-12 col-lg-6 reveal">
+                    <article class="about-credentials h-100">
+                        <h3 class="h5 mb-2">Computer vision-based assessment of building facade vulnerability and debris fall risk zones on the street during seismic events using street-level photography</h3>
+                        <p class="text-muted mb-3">61st ISOCARP World Planning Congress &middot; 2025 &middot; Riyadh, Saudi Arabia</p>
+                        <p class="mb-0">
+                            <a class="link-dark" href="assets/docs/ISOCARP-2025-Slides_Leng-Monykandy.pdf" target="_blank" rel="noopener noreferrer">Slides (PDF)</a>
+                            &middot;
+                            <a class="link-dark" href="assets/docs/ISOCARP-2025-Abstract_Leng-Monykandy.pdf" target="_blank" rel="noopener noreferrer">Abstract</a>
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="site-section py-3 py-lg-4" id="research">
+        <div class="container">
+            <div class="mb-3 reveal">
+                <h2>Selected work</h2>
+                <hr class="section-rule">
+            </div>
+            <div class="project-grid row g-4 mb-4">
+                <div class="col-12 reveal">
+                    <article class="project-card project-card--light project-card--diagram text-start">
+                        <a class="project-card__media" href="code-articles/svi-to-3d-novel-views.html"><img src="assets/img/research/diagram-reconstruction-overview.png" alt="High-level workflow from street-view imagery to novel pedestrian views" loading="lazy"></a>
+                        <div class="project-card__body">
+                            <p class="project-card__meta">Core pipeline &middot; patent in process</p>
+                            <h3 class="project-card__title"><a href="code-articles/svi-to-3d-novel-views.html">SVI &#8594; 3D &amp; Novel Pedestrian Views</a></h3>
+                            <p class="project-card__text">From sequential street-view panoramas to analysis-ready environments and eye-level views along pedestrian paths &mdash; the main research line.</p>
+                            <div class="project-card__action"><a class="btn btn-arch rounded-0 text-uppercase" href="code-articles/svi-to-3d-novel-views.html">Read overview</a></div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <div class="project-grid row g-4 row-cols-1 row-cols-md-2 row-cols-lg-3">
+                <div class="col reveal">
+                    <article class="project-card project-card--light">
+                        <a class="project-card__media" href="code-articles/gisa-3d-segmentation.html"><img src="assets/img/research/cover-segmentation.svg" alt="Segmented 3D point cloud of an urban street, top view" loading="lazy"></a>
+                        <div class="project-card__body">
+                            <p class="project-card__meta">GISA 2025 &middot; Research</p>
+                            <h3 class="project-card__title"><a href="code-articles/gisa-3d-segmentation.html">3D Urban Segmentation from Street-View Imagery</a></h3>
+                            <p class="project-card__text">Turns panoramic street-view sequences into segmented 3D scenes that preserve spatial relations for mid-to-small scale urban analysis.</p>
+                            <div class="project-card__action"><a class="btn btn-arch rounded-0 text-uppercase" href="code-articles/gisa-3d-segmentation.html">Read overview</a></div>
+                        </div>
+                    </article>
+                </div>
+                <div class="col reveal">
+                    <article class="project-card project-card--light">
+                        <a class="project-card__media" href="code-articles/isocarp-facade-risk.html"><img src="assets/img/research/cover-seismic.svg" alt="Facade fall-zone risk bands projected onto a sidewalk" loading="lazy"></a>
+                        <div class="project-card__body">
+                            <p class="project-card__meta">ISOCARP 2025 &middot; Research</p>
+                            <h3 class="project-card__title"><a href="code-articles/isocarp-facade-risk.html">Facade Debris Risk Zones from Street-Level Imagery</a></h3>
+                            <p class="project-card__text">Maps facade-related debris risk and safer pedestrian zones during seismic events using accessible street-level imagery.</p>
+                            <div class="project-card__action"><a class="btn btn-arch rounded-0 text-uppercase" href="code-articles/isocarp-facade-risk.html">Read overview</a></div>
+                        </div>
+                    </article>
+                </div>
+                <div class="col reveal" data-bss-type="blog-loop-item">
+                    <article class="project-card project-card--light">
+                        <a class="project-card__media" href="code-articles/article-1.html"><img src="assets/img/research/cover-solar.svg" alt="Solar exposure heatmap by month and hour with the sun path" loading="lazy"></a>
+                        <div class="project-card__body">
+                            <p class="project-card__meta">Application note &middot; optional</p>
+                            <h3 class="project-card__title"><a href="code-articles/article-1.html">Solar Exposure Analysis using 360 Images</a></h3>
+                            <p class="project-card__text">One analysis that can run on novel-view panoramas &mdash; not the core contribution.</p>
+                            <div class="project-card__action"><a class="btn btn-arch rounded-0 text-uppercase" href="code-articles/article-1.html">Read note</a></div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="site-section py-3 py-lg-4" id="github">
+        <div class="container">
+            <div class="mb-4 reveal">
+                <h2>Code &amp; data</h2>
+                <hr class="section-rule">
+                <p class="text-muted mb-3 mt-3">Primary implementation is private while a patent is in process. Profile and selected repos below.</p>
+                <p class="mb-3">
+                    <a class="link-dark" href="https://github.com/X3n0xs/SVI_to_3d_code" rel="noopener noreferrer" target="_blank">SVI_to_3d_code</a>
+                    <span class="text-muted"> &mdash; private &middot; core reconstruction &amp; novel-view pipeline</span>
+                </p>
+                <a class="github-profile-link link-dark" data-github-profile href="https://github.com/X3n0xs" rel="noopener noreferrer" target="_blank">
+                    <svg class="icon icon-tabler icon-tabler-brand-github" xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+                    </svg>
+                    @X3n0xs on GitHub
+                </a>
+            </div>
+            <div data-github-repos></div>
+        </div>
+    </section>
+    <section class="site-section py-3 py-lg-4" id="background">
+        <div class="container">
+            <div class="mb-4 reveal">
+                <h2>Background</h2>
+                <hr class="section-rule">
+                <p class="text-muted mb-0 mt-3">Design training that informs how I read urban space in research.</p>
+            </div>
+            <div class="project-grid row g-4 reveal">
+                <div class="col-12">
+                    <article class="project-card project-card--light text-start">
+                        <a class="project-card__media" href="archi.html"><picture><source srcset="assets/img/archi/biocityfacade.webp" type="image/webp"><img src="assets/img/archi/biocityfacade.jpg" alt="Architecture portfolio" loading="lazy"></picture></a>
+                        <div class="project-card__body">
+                            <h3 class="project-card__title"><a href="archi.html">Architecture portfolio</a></h3>
+                            <p class="project-card__text">Drawings, competitions, visualization, and immersive 360&deg; documentation &mdash; the spatial literacy behind my urban analytics work.</p>
+                            <div class="project-card__action"><a class="btn btn-arch rounded-0 text-uppercase" href="archi.html">View architecture</a></div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="text-center bg-body-tertiary">
+        <div class="container py-4 py-lg-5">
+            <h1 class="fs-4 text-body mb-4"> <svg class="icon icon-tabler icon-tabler-chart-dots-3 fs-4 me-2" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M5 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M12 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M19 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M5 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M12 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M19 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M5 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M12 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                    <path d="M19 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                </svg>Monykandy</h1>
+            <ul class="list-inline">
+                <li class="list-inline-item me-3"><a class="link-body-emphasis" href="code.html">Research</a></li>
+                <li class="list-inline-item me-3"><a class="link-body-emphasis" href="archi.html">Architecture</a></li>
+                <li class="list-inline-item me-3"><a class="link-body-emphasis" href="contacts.html">About</a></li>
+            </ul>
+            <p class="text-muted mb-3">Copyright &copy; 2026 Monykandy</p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a class="link-body-emphasis" data-github-profile href="https://github.com/X3n0xs" rel="noopener noreferrer" target="_blank" aria-label="GitHub"><svg class="icon icon-tabler icon-tabler-brand-github" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
+                        </svg></a></li>
+            </ul>
+        </div>
+    </footer>
+    <script src="assets/bootstrap/js/bootstrap.min.js?h=9b160b415b961aeb41b64305a23d2953"></script>
+    <script src="assets/js/bs-init.js?h=e2b0d57f2c4a9b0d13919304f87f79ae"></script>
+    <script src="assets/js/baguetteBox.min.js?h=add865daffd8b6e10264279f48d8ac50"></script>
+    <script src="assets/js/github-repos.js"></script>
+    <script src="assets/js/template.js?h=b6c06d540ba754c2f132f5c3a82a199b"></script>
+</body>
+
+</html>

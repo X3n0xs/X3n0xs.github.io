@@ -1,0 +1,32 @@
+<svg viewBox="0 0 640 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Solar exposure heatmap by month and hour with the sun path">
+  <defs>
+    <linearGradient id="solRamp" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3a3a40"></stop>
+      <stop offset="26%" stop-color="#9a9994"></stop>
+      <stop offset="50%" stop-color="#edeae3"></stop>
+      <stop offset="74%" stop-color="#9a9994"></stop>
+      <stop offset="100%" stop-color="#3a3a40"></stop>
+    </linearGradient>
+    <pattern id="solGrid" width="41.6" height="33" patternUnits="userSpaceOnUse">
+      <path d="M41.6 0 V33 M0 33 H41.6" stroke="#f2f1ee" stroke-width="1.4"></path>
+    </pattern>
+  </defs>
+  <rect width="640" height="400" fill="#f2f1ee"></rect>
+
+  <!-- heatmap panel: month (x) x hour (y), bright midday band -->
+  <rect x="72" y="70" width="500" height="231" fill="url(#solRamp)"></rect>
+  <rect x="72" y="70" width="500" height="231" fill="url(#solGrid)"></rect>
+  <rect x="72" y="70" width="500" height="231" fill="none" stroke="#cfcdc8" stroke-width="1.5"></rect>
+
+  <!-- sun path arc across the day -->
+  <path d="M72 288 Q322 96 572 288" fill="none" stroke="#2a2a30" stroke-width="1.6" stroke-dasharray="3 6"></path>
+  <circle cx="322" cy="150" r="7" fill="#2a2a30"></circle>
+
+  <!-- axes -->
+  <text x="60" y="96" text-anchor="end" font-family="'Inter',sans-serif" font-size="12" fill="#6f6e6b">18h</text>
+  <text x="60" y="190" text-anchor="end" font-family="'Inter',sans-serif" font-size="12" fill="#6f6e6b">12h</text>
+  <text x="60" y="290" text-anchor="end" font-family="'Inter',sans-serif" font-size="12" fill="#6f6e6b">6h</text>
+  <g font-family="'Inter',sans-serif" font-size="12" fill="#6f6e6b" text-anchor="middle">
+    <text x="93" y="322">J</text><text x="135" y="322">F</text><text x="176" y="322">M</text><text x="218" y="322">A</text><text x="260" y="322">M</text><text x="301" y="322">J</text><text x="343" y="322">J</text><text x="385" y="322">A</text><text x="426" y="322">S</text><text x="468" y="322">O</text><text x="510" y="322">N</text><text x="551" y="322">D</text>
+  </g>
+</svg>
